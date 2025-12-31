@@ -1,4 +1,4 @@
-Build bookworm-flightaware sdcard for orangepi 5 plus and rockpi4b:
+Build bookworm-flightaware sdcard for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
 
 Parts required:
 1. Car/Indoor Antenna for FlightAware.
@@ -8,13 +8,14 @@ Parts required:
 Input files: ../rootfs-bookworm/linaro-rootfs.img
                                /linaro-esp.img
 
-Plugin sdcard to PC.
+Plugin sdcard to PC.               ( roc-rk3328-cc use usb3 stick )
 sudo ./mksdcardimg.sh
 sudo mount /dev/sda2 /mnt
 cp ./flightaware/* /mnt/home/linaro
 sync; sudo umount /mnt;
 Eject sdcard from PC.
 
+Plugin usb3 stick and ethernet cable to roc-rk3328-cc.
 Plugin sdcard to orangepi 5 plus/rockpi4b. Plugin ethernet cable to orangepi 5 plus.
 (opi5+) Esc -> Boot Manager -> ( sdcard, emmc userdata or the last UEFI )
 Login:

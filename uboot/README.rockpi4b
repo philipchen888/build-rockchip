@@ -2,6 +2,7 @@ Compile uboot:
 
 git clone https://github.com/radxa/rkbin.git -b master --tags develop-v20240301
 mv develop-v20240301 rkbin
+\rm -rf u-boot
 git clone --depth=1 --branch=v2023.01 https://source.denx.de/u-boot/u-boot.git
 
 To boot extlinux:

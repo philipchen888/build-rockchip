@@ -1,4 +1,4 @@
-This is to build sdcard image for orangepi5plus and rockpi4b:
+This is to build sdcard image for orangepi5plus, rockpi4b and roc-rk3328-cc:
 
 Parts needed:
 1. orangepi5plus and rockpi4b.
@@ -45,6 +45,10 @@ Steps to build orangepi5plus sdcard image:
 4. cd ~/build-rockchip/linux ( Compile mainline kernel )
    git clone --depth=1 --branch v6.18 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
    vi ./linux/arch/arm64/configs/defconfig ( enable NVMe )
+
+   For roc-rk3328-cc:
+   vi linux/arch/arm64/boot/dts/rockchip/rk3328-roc.dtsi ( change i2c1 uart1 spi0 pwm2 )
+   make MYCHIP=rk3328 kernel
 
    For opi5+:
    vi ./linux/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi ( change gpu )

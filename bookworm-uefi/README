@@ -1,7 +1,8 @@
-Build bookworm-uefi sdcard image for orangepi5 plus and rockpi4b:
+Build bookworm-uefi sdcard image for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
 Input files: ../linux/linux/tmp/lib/modules
              ../linux/linux/arch/arm64/boot/Image
+             ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
              ../linux/linux/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dtb
              ../linux/linux/arch/arm64/boot/dtb/rockchip/rk3399-rock-pi-4b.dtb
 
@@ -20,7 +21,7 @@ sudo cp -r ../../linux/linux/tmp/lib/modules/* lib/modules/
 find . | cpio -o -H newc | gzip > ../initrd-patched.gz
 cd ../
 
-Plugin NVMe SSD to PC. 
+Plugin NVMe SSD/usb3 stick to PC. 
 sudo ./mksdcardimg.sh
 sudo mkfs.vfat /dev/sda1
 sudo mkfs.ext4 /dev/sda2
@@ -32,6 +33,7 @@ sudo mount /dev/sda2 /mnt
 sudo \rm -rf /mnt/boot /mnt/efi /mnt/dtb-* /mnt/init* /mnt/lost+found /mnt/symvers* /mnt/System* /mnt/vmlinuz* /mnt/.vmlinuz* /mnt/config* /mnt/dtb
 sudo 7z x ~/Downloads/debian-12.11.0-arm64-netinst.iso -o/mnt && sync;
 sudo cp ../linux/linux/arch/arm64/boot/Image /mnt
+(roc-rk3328-cc) sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb /mnt
 (rockpi4b) sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dtb /mnt
 (opi5+)    sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dtb /mnt
 sudo cp initrd-patched.gz /mnt/initrd.gz
@@ -40,15 +42,17 @@ sudo chmod 755 /mnt/loader/entries/*
 sudo vi /mnt/loader/entries/*aarch64.conf ( change to
 linux /Image
 initrd /initrd.gz
-(rockpi4b) devicetree /rk3399-rock-pi-4b.dtb
-(opi5+)    devicetree /rk3588-orangepi-5-plus.dtb
+(roc-rk3328-cc) devicetree /rk3328-roc-cc.dtb
+(rockpi4b)      devicetree /rk3399-rock-pi-4b.dtb
+(opi5+)         devicetree /rk3588-orangepi-5-plus.dtb
 delete options
 )
 sync; sudo umount /mnt;
 sudo mount /dev/sda1 /mnt
 sudo rm -rf /mnt/b* /mnt/c* /mnt/f* /mnt/o* /mnt/r* /mnt/s* && sync && sudo umount /mnt
-Eject NVMe SSD from PC.
+Eject NVMe SSD/usb3 stick from PC.
 
+Plugin sdcard, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
 Plugin NVMe SSD and ethernet cable to opi5+/rockpi4b. Power on opi5+/rockpi4b.
 
 loading missing firmware? No
@@ -58,13 +62,13 @@ Install without kernel modules ( yes )
 Partition ( Manual, select space, auto partion, all, finish, Yes )
 Select debian desktop and gnome in addition to ssh and standard system utilities.
 
-(rockpi4b) Force GRUB to install to the EFI ( Yes )
-(rockpi4b) Update NVMRAM to boot Debian ( Yes )
-(rockpi4b) Stuck at Unable to install GRUB in dummy.
-(rockpi4b) Continue without bootloader.
-Power off opi5+/rockpi4b when installation completed. Remove NVMe SSD.
+(rockpi4b, roc-rk3328-cc) Force GRUB to install to the EFI ( Yes )
+(rockpi4b, roc-rk3328-cc) Update NVMRAM to boot Debian ( Yes )
+(rockpi4b, roc-rk3328-cc) Stuck at Unable to install GRUB in dummy.
+(rockpi4b, roc-rk3328-cc) Continue without bootloader.
+Power off opi5+/rockpi4b/roc-rk3328-cc when installation completed. Remove NVMe SSD/usb3 stick.
 
-Plugin NVMe SSD to PC.
+Plugin NVMe SSD/usb3 stick to PC.
 sudo fdisk -l /dev/sda
 sudo e2label /dev/sda3 rootfs
 sudo blkid /dev/sda1 ( write down UUID )
@@ -89,22 +93,23 @@ menuentry "Boot UUID" {
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )
-Note: update above UUID, devicetree accordingly.
+Note: update above UUID, devicetree accordingly. Change to rootdelay=50 for roc-rk3328-cc.
 sudo vi /mnt/etc/fstab ( check UUID for /boot/efi )
-sudo mkdir -p /mnt/lib/firmware/arm/mali/arch10.8/
-sudo rm -f /mnt/lib/firmware/arm/mali/arch10.8/*
-sudo wget https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/arm/mali/arch10.8/mali_csffw.bin -P /mnt/lib/firmware/arm/mali/arch10.8/
-sudo chmod 644 /mnt/lib/firmware/arm/mali/arch10.8/mali_csffw.bin
-sudo echo "panthor" | sudo tee /mnt/etc/modules-load.d/panthor.conf
+(opi5+) sudo mkdir -p /mnt/lib/firmware/arm/mali/arch10.8/
+(opi5+) sudo rm -f /mnt/lib/firmware/arm/mali/arch10.8/*
+(opi5+) sudo wget https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/arm/mali/arch10.8/mali_csffw.bin -P /mnt/lib/firmware/arm/mali/arch10.8/
+(opi5+) sudo chmod 644 /mnt/lib/firmware/arm/mali/arch10.8/mali_csffw.bin
+(opi5+) sudo echo "panthor" | sudo tee /mnt/etc/modules-load.d/panthor.conf
 sudo mkdir -p /mnt/lib/firmware/brcm
 sudo cp ./packages/* /mnt/lib/firmware/brcm
 sync; sudo umount /mnt;
 sudo mount /dev/sda1 /mnt
 sudo \rm -rf /mnt/EFI/fedora
 sync; sudo umount /mnt;
-Eject NVMe SSD from PC.
+Eject NVMe SSD/usb3 stick from PC.
 
 (rockpi4b) Remove ethernet cable.
+Plugin sdcard, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
 Plugin NVMe SSD to opi5+/rockpi4b. Plugin ethernet cable to opi5+. Power on opi5+/rockpi4b.
 (rockpi4b) Setup wifi.
 Disable power saving, auto suspend and screen saver.
@@ -157,12 +162,13 @@ pavucontrol  ( select hdmi as default )
 
 firefox -> youtube -> search YmDNhi07_Ho
 
-Do follows on PC, then ftp swan.mp4 to opi5+/rockpi4b.
+Do follows on PC, then ftp swan.mp4 to opi5+/rockpi4b/roc-rk3328-cc.
 (
 git clone https://github.com/yt-dlp/yt-dlp.git
 cd yt-dlp
 make
 cd ../
+(roc-rk3328-cc) ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -r 10 -c:v libx264 -b:v 2M -c:a copy"
 (rockpi4b) ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -c:v libx264 -b:v 2M -c:a copy"
 (opi5+)    ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -c:v libx265 -b:v 2M -c:a copy"
 )
@@ -171,7 +177,7 @@ mpv --hwdec=auto-copy swan.mp4
 ffplay swan.mp4
 cvlc --gl=wgl --glconv=any swan.mp4
 
-(opi5+) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+.
+(opi5+, roc-rk3328-cc) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+/roc-rk3328-cc.
 sudo rfkill list
 hciconfig hci0
 hcitool dev

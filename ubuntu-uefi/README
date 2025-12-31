@@ -1,28 +1,33 @@
-Build ubuntu-uefi sdcard image for orangepi5 plus and rockpi4b:
+Build ubuntu-uefi sdcard image for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
-Install ubuntu from usb3 stick ubuntu iso to empty NVMe-SSD.
+(roc-rk3328-cc) Install ubuntu from USB3 1TB SSD ubuntu iso to empty usb3 stick.
+(rockpi4b)      Install ubuntu from USB3 1TB SSD ubuntu iso to empty NVMe-SSD.
+(opi5+)         Install ubuntu from usb3 stick ubuntu iso to empty NVMe-SSD.
 
 Input files: ../linux/linux/tmp/lib/modules
              ../linux/linux/arch/arm64/boot/Image
+             ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
              ../linux/linux/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dtb
+             ../linux/linux/arch/arm64/boot/dtb/rockchip/rk3399-rock-pi-4b.dtb
 
 cd ~/Downloads
 wget https://cdimage.ubuntu.com/releases/25.10/release/ubuntu-25.10-desktop-arm64.iso
 
 cd ~/build-rockchip/ubuntu-uefi
 
-Plugin usb3 stick to PC. (rockpi4b use USB3 1TB SSD)
+Plugin usb3 stick to PC.  (rockpi4b, roc-rk3328-cc use USB3 1TB SSD)
 sudo ./mkusb3stick.sh
 sudo mkfs.vfat /dev/sda1
 sudo fdisk -l /dev/sda
 sudo mount /dev/sda1 /mnt
 sudo 7z x ~/Downloads/ubuntu-25.10-desktop-arm64.iso -o/mnt && sync && sudo umount /mnt
-Eject usb3 stick from PC.  (rockpi4b use USB3 1TB SSD)
+Eject usb3 stick from PC. (rockpi4b, roc-rk3328-cc use USB3 1TB SSD)
 
-Plugin NVMe-SSD to PC.
+Plugin NVMe-SSD to PC.    ( roc-rk3328-cc use usb3 stick )
 sudo ./mknvme.sh
-Eject NVMe-SSD from PC.
+Eject NVMe-SSD from PC.   ( roc-rk3328-cc use usb3 stick )
 
+Plugin sdcard, USB3 1TB SSD, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
 Plugin NVMe-SSD, usb3 stick (rockpi4b use USB3 1TB SSD) and ethernet cable to opi5+/rockpi4b. Power on opi5+/rockpi4b.
 
 Select install
@@ -30,8 +35,8 @@ Double click Install Ubuntu LTS icon.
 Erase disk.  ( if no NVMe SSD detected, power off/on again )
 Contine till finished. Restart.
 
-Remove usb3 stick (rockpi4b use USB3 1TB SSD) from opi5+/rockpi4b.
-Plugin NVMe-SSD to PC.
+Remove usb3 stick (rockpi4b, roc-rk3328-cc use USB3 1TB SSD) from opi5+/rockpi4b/roc-rk3328-cc.
+Plugin NVMe-SSD/usb3 stick to PC.
 sudo fdisk -l /dev/sda
 sudo e2label /dev/sda2 rootfs
 sudo blkid /dev/sda1 ( write down UUID )
@@ -57,18 +62,18 @@ menuentry "Boot UUID" {
 }
 )
 Note: update above UUID, devicetree accordingly.
-sudo mkdir -p /mnt/lib/firmware/arm/mali/arch10.8/
-sudo rm -f /mnt/lib/firmware/arm/mali/arch10.8/*
-sudo wget https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/arm/mali/arch10.8/mali_csffw.bin -P /mnt/lib/firmware/arm/mali/arch10.8/
-sudo chmod 644 /mnt/lib/firmware/arm/mali/arch10.8/mali_csffw.bin
-sudo echo "panthor" | sudo tee /mnt/etc/modules-load.d/panthor.conf
+(opi5+) sudo mkdir -p /mnt/lib/firmware/arm/mali/arch10.8/
+(opi5+) sudo rm -f /mnt/lib/firmware/arm/mali/arch10.8/*
+(opi5+) sudo wget https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/arm/mali/arch10.8/mali_csffw.bin -P /mnt/lib/firmware/arm/mali/arch10.8/
+(opi5+) sudo chmod 644 /mnt/lib/firmware/arm/mali/arch10.8/mali_csffw.bin
+(opi5+) sudo echo "panthor" | sudo tee /mnt/etc/modules-load.d/panthor.conf
 sudo mkdir -p /mnt/lib/firmware/brcm
 sudo cp ./packages/* /mnt/lib/firmware/brcm
 sync; sudo umount /mnt;
-Eject NVMe-SSD from PC.
+Eject NVMe-SSD/usb3 stick from PC.
 
 (rockpi4b) Remove ethernet cable.
-Plugin NVMe SSD to opi5+/rockpi4b. Plugin ethernet cable to opi5+. Power on opi5+/rockpi4b.
+Plugin NVMe SSD/usb3 stick to opi5+/rockpi4b/roc-rk3328-cc. Plugin ethernet cable to opi5+/roc-rk3328-cc. Power on opi5+/rockpi4b/roc-rk3328-cc.
 Login:
 Username: linaro
 Password: linaro
@@ -120,12 +125,13 @@ sudo apt update; sudo apt upgrade -y;
 sudo apt install firefox-esr
 firefox -> youtube.com -> search YmDNhi07_Ho
 
-Do follows on PC, then ftp swan.mp4 to opi5+/rockpi4b.
+Do follows on PC, then ftp swan.mp4 to opi5+/rockpi4b/roc-rk3328-cc.
 (
 git clone https://github.com/yt-dlp/yt-dlp.git
 cd yt-dlp
 make
 cd ../
+(roc-rk3328-cc) ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -r 10 -c:v libx264 -b:v 2M -c:a copy"
 (rockpi4b) ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -c:v libx264 -b:v 2M -c:a copy"
 (opi5+)    ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -c:v libx265 -b:v 2M -c:a copy"
 )
@@ -134,7 +140,7 @@ mpv --hwdec=auto-copy swan.mp4
 ffplay swan.mp4
 cvlc --gl=wgl --glconv=any swan.mp4
 
-(opi5+) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+.
+(opi5+, roc-rk3328-cc) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+/roc-rk3328-cc.
 sudo rfkill list
 hciconfig hci0
 hcitool dev

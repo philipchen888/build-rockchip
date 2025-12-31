@@ -1,13 +1,14 @@
-Build bookworm-gnome sdcard for orangepi 5 plus and rockpi4b:
+Build bookworm-gnome sdcard for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
 
 Input files: ../rootfs-bookworm/linaro-rootfs.img
                                /linaro-esp.img
 
-Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
+Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.  ( roc-rk3328-cc use usb3 stick )
 sudo ./mksdcardimg.sh
 Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
 
-Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to orangepi 5 plus/rocpi4b. Plugin ethernet cable to orangepi 5 plus.
+Plugin sdcard, usb3 stick and ethernet cable to roc-rk3328-cc.
+Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to orangepi 5 plus/rockpi4b. Plugin ethernet cable to orangepi 5 plus.
 (opi5+) Esc -> Boot Manager -> ( sdcard, emmc userdata or the last UEFI )
 Login:
 Username: linaro
@@ -44,12 +45,13 @@ pavucontrol  ( select hdmi0 as default )
 
 firefox -> youtube.com -> search YmDNhi07_Ho
 
-Do follows on PC, then ftp swan.mp4 to rockpi4b/opi5+.
+Do follows on PC, then ftp swan.mp4 to rockpi4b/opi5+/roc-rk3328-cc.
 (
 git clone https://github.com/yt-dlp/yt-dlp.git
 cd yt-dlp
 make
 cd ../
+(roc-rk3328-cc) ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -r 10 -c:v libx264 -b:v 2M -c:a copy"
 (rockpi4b) ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -c:v libx264 -b:v 2M -c:a copy"
 (opi5+)    ~/yt-dlp/yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]' 3qrKjywjo7Q -o swan.mp4 --postprocessor-args " -c:v libx265 -b:v 2M -c:a copy"
 )
@@ -58,7 +60,7 @@ mpv --hwdec=auto-copy swan.mp4
 ffplay swan.mp4
 cvlc --gl=wgl --glconv=any swan.mp4
 
-(opi5+) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+.
+(opi5+, roc-rk3328-cc) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+/roc-rk3328-cc.
 sudo rfkill list
 hciconfig hci0
 hcitool dev

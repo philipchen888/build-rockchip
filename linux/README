@@ -1,7 +1,8 @@
-compile mainline kernel for orangepi5 plus and rockpi4b:
+compile mainline kernel for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
 git clone --depth=1 --branch v6.18 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
+For opi5+ and rockpi4b:
 vi ./linux/arch/arm64/configs/defconfig ( enable NVMe change to:
 CONFIG_PHY_ROCKCHIP_PCIE=y
 CONFIG_BLK_DEV_NVME=y
@@ -13,6 +14,8 @@ CONFIG_DRM_ROCKCHIP=y
 CONFIG_ROCKCHIP_SARADC=y
 CONFIG_PHY_ROCKCHIP_INNO_HDMI=y
 )
+
+------------------------------------------------------------------------------
 
 For opi5+:
 vi ./linux/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi ( change compatible = "rockchip,rk3588-mali", "arm,mali-valhall-csf"; to compatible = "arm,mali-valhall-csf", "arm,mali-g610"; )
@@ -45,6 +48,8 @@ vi linux/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5.dtsi ( change to:
 
 make MYCHIP=opi5 kernel
 
+-------------------------------------------------------------------------
+
 For rockpi4b:
 vi ./linux/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi ( add
 &i2c7 {
@@ -72,3 +77,31 @@ vi ./linux/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi ( add
 )
 
 make MYCHIP=rockpi4b kernel
+
+-------------------------------------------------------------------------
+
+For roc-rk3328-cc:
+vi linux/arch/arm64/boot/dts/rockchip/rk3328-roc.dtsi ( change to:
+&i2c1 {
+        status = "okay";
+
+&uart1 {
+        status = "okay";
+};
+
+&spi0 {
+        status = "okay";
+        spidev@0 {
+                compatible = "cisco,spi-petra";
+                reg = <0>;
+                spi-max-frequency = <10000000>;
+        };
+};
+
+&pwm2 {
+        status = "okay";
+};
+)
+
+make MYCHIP=rk3328 kernel
+make postbuildkernel
