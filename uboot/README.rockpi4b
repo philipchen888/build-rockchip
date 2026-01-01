@@ -3,7 +3,7 @@ Compile uboot:
 git clone https://github.com/radxa/rkbin.git -b master --tags develop-v20240301
 mv develop-v20240301 rkbin
 \rm -rf u-boot
-git clone --depth=1 --branch=v2023.01 https://source.denx.de/u-boot/u-boot.git
+git clone --depth=1 -b v2023.01 https://source.denx.de/u-boot/u-boot.git
 
 To boot extlinux:
 vi ./u-boot/configs/rock-pi-4-rk3399_defconfig ( append:
@@ -16,6 +16,8 @@ CONFIG_BOOTSTD=y
 CONFIG_BOOTSTD_FULL=y
 CONFIG_BOOTFLOW=y
 CONFIG_BOOTFLOW_FULL=y
+CONFIG_BLOBLIST=y
+CONFIG_BLOBLIST_ALLOC=y
 )
 
 To boot uefi:
@@ -33,6 +35,8 @@ CONFIG_FS_FAT=y
 CONFIG_CMD_MMC=y
 CONFIG_EFI_LOADER=y
 CONFIG_CMD_BOOTEFI=y
+CONFIG_BLOBLIST=y
+CONFIG_BLOBLIST_ALLOC=y
 )
 
 make -f Makefile.rockpi4b u-boot
@@ -53,7 +57,7 @@ gunzip rockpi4b_debian_buster_xfce4_arm64_20210608_1321-gpt.img.gz
 
 Unplug EMMC/USB-SATA-SSD/NVMe-SSD from rockpi4b
 Burn rockpi4b_debian_buster_xfce4_arm64_20210608_1321-gpt.img to sdcard.
-Boot rockpi4b with sdcard.
+Boot rockpi4b with sdcard.  ( username: rock, password: rock )
 
 Erase spi nor flash:
 sudo dd if=/dev/zero of=/dev/mtdblock0 bs=1M seek=0 count=4

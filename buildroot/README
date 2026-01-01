@@ -1,0 +1,126 @@
+Build buildroot sdcard image for orangepi 5 plus, rockpi4b and roc-rk3328-cc.
+
+(opi5+)    See ../uboot/README.opi5 to erase SPI flash.
+(opi5+)         Input files: ../uboot/out/idbloader.img
+                             ../uboot/out/u-boot.itb
+                             ../linux/linux/arch/arm64/boot/Image
+                             ../linux/linux/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dtb
+                             ../linux/linux/tmp/lib/modules/
+
+(rockpi4b) See ../uboot/README.rockpi4b to erase SPI flash.
+(rockpi4b)      Input files: ../uboot/out/idbloader.img
+                             ../uboot/out/uboot.img
+                             ../uboot/out/trust.img
+
+(roc-rk3328-cc) Input files: ../uboot/out/idbloader.img  ( config to use extlinux )
+                             ../uboot/out/uboot.img
+                             ../uboot/out/trust.img
+                             ../linux/out/boot.img
+                             ../linux/linux/tmp/lib/modules
+
+wget https://buildroot.org/downloads/buildroot-2025.08.1.tar.gz
+tar -xzf buildroot-2025.08.1.tar.gz
+mv buildroot-2025.08.1 buildroot
+
+For opi5+:
+vi ./buildroot/configs/orangepi_5_plus_defconfig ( delete KERNEL, UBOOT, BR2_DOWNLOAD_FORCE_CHECK_HASHES=y, BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_6_12=y, BR2_GLOBAL_PATCH_DIR, append ./patches/orangepi_5_defconfig )
+cp ./patches/orangepi-5/* ./buildroot/board/orangepi/orangepi-5-plus/
+
+For rockpi4b:
+vi ./buildroot/configs/rock4se_defconfig ( delete UBOOT, KERNEL, BR2_DOWNLOAD_FORCE_CHECK_HASHES=y, append ./patches/rockpi4_defconfig )
+cp ./patches/rockpi-4/* ./buildroot/board/radxa/rock4se/
+
+For roc-rk3328-cc:
+vi ./buildroot/configs/rock4se_defconfig ( change BR2_cortex_a72_a53=y to BR2_cortex_a53=y, delete UBOOT, KERNEL, BR2_DOWNLOAD_FORCE_CHECK_HASHES=y, append ./patches/rk3328_defconfig )
+cp ./patches/roc-rk3328-cc/* ./buildroot/board/radxa/rock4se/
+
+cd buildroot
+\rm -rf .config output
+make clean
+(rockpi4b, roc-rk3328-cc) make rock4se_defconfig
+(rockpi4b) make linux
+(opi5+)    make orangepi_5_plus_defconfig
+make
+
+The result is in ./output/images/sdcard.img
+
+Plugin sdcard to PC.
+sudo dd if=./output/images/sdcard.img of=/dev/sda bs=4096 conv=notrunc,fsync
+
+(opi5+, rockpi4b) sudo mount /dev/sda4 /mnt
+(roc-rk3328-cc)   sudo mount /dev/sda5 /mnt
+sudo vi /mnt/etc/network/interfaces ( delete everything after iface lo inet loopback )
+sudo vi /mnt/etc/vsftpd.conf ( anonymous_enable=NO, local_enable=YES, write_enable=YES )
+(opi5+, roc-rk3328-cc) sudo mkdir -p /mnt/lib/modules
+(opi5+, roc-rk3328-cc) sudo cp -r ../../linux/linux/tmp/lib/modules/* /mnt/lib/modules
+(rockpi4b) sudo mkdir -p /mnt/lib/firmware/brcm/
+(rockpi4b) sudo cp ../patches/brcm/* /mnt/lib/firmware/brcm/
+sync; sudo umount /mnt;
+Eject sdcard from PC.
+
+Plugin sdcard to rockpi4b.
+Plugin sdcard and ethernet cable to orangepi_5_plus/roc-rk3328-cc.
+login:
+username: root
+password: linaro
+
+(rockpi4b) wpa_passphrase your_SSID your_passphrase > /etc/ssid.conf
+(rockpi4b) wpa_supplicant -B -i wlan0 -c /etc/ssid.conf
+(rockpi4b) dhcpcd wlan0
+
+ifconfig
+
+ssh root@192.168.86.211
+
+uname -a
+adduser linaro
+(roc-rk3328-cc) vi /etc/group ( append ,linaro to end of audio and pulse )
+(roc-rk3328-cc) id linaro
+
+date
+aplay -l
+
+-------------------------------------------------------
+For roc-rk3328-cc:
+vi /etc/asound.conf ( add
+pcm.!default {
+    type pulse
+}
+
+ctl.!default {
+    type pulse
+}
+)
+mkdir -p /home/linaro/pulse-runtime
+export PULSE_RUNTIME_PATH=/home/linaro/pulse-runtime
+pulseaudio --start
+pactl list short sinks
+pactl set-sink-volume 0 25%
+
+------------------------------------------------------
+For opi5+/rockpi4b:
+vi /etc/asound.conf ( add
+pcm.!default {
+type hw
+card 1
+}
+ctl.!default {
+type hw
+card 1
+}
+)
+
+(rockpi4b) change to card 0
+(rockpi4b, opi5+) alsactl -F restore
+
+-----------------------------------------------------
+aplay /home/linaro/yoursong.wav
+(opi5+)    mpg123 -a hw:1,0 /home/linaro/yoursong.mp3
+(rockpi4b) mpg123 -a hw:0,0 /home/linaro/yoursong.mp3
+mpv /home/linaro/yoursong.mp3
+
+For rockpi4b:
+bluetoothctl list
+hciconfig hci0
+hciconfig -a
+hcitool dev
