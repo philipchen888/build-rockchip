@@ -1,5 +1,7 @@
 Build bookworm-uefi sdcard image for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
+Note: If mainline kernel v6.19 cannot boot bookworm-uefi recompile kernel with v6.18.
+
 Input files: ../linux/linux/tmp/lib/modules
              ../linux/linux/arch/arm64/boot/Image
              ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
@@ -18,6 +20,7 @@ Prepare initrd.gz:
 mkdir tmp; cd tmp;
 sudo gzip -dc ~/Downloads/initrd.gz | sudo cpio -id
 sudo cp -r ../../linux/linux/tmp/lib/modules/* lib/modules/
+\rm -f ../initrd-patched.gz
 find . | cpio -o -H newc | gzip > ../initrd-patched.gz
 cd ../
 
@@ -86,10 +89,10 @@ set menu_color_highlight=white/green
 
 menuentry "Boot UUID" {
     search --no-floppy --fs-uuid --set=root 4817ba5f-fb50-43b1-9f8c-fa25047a570d
-    echo    'Loading Linux 6.18.0-dirty ...'
-    linux /boot/vmlinuz-6.18.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
+    echo    'Loading Linux 6.19.0-dirty ...'
+    linux /boot/vmlinuz-6.19.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
     echo    'Loading initial ramdisk ...'
-    initrd /boot/initrd.img-6.1.0-41-arm64
+    initrd /boot/initrd.img-6.1.0-44-arm64
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )
@@ -141,7 +144,7 @@ exit
 sync
 sudo update-initramfs -u -k $(uname -r)
 sudo vi /boot/grub/grub.cfg ( change to:
-   initrd /boot/initrd.img-6.18.0-dirty
+   initrd /boot/initrd.img-6.19.0-dirty
 )
 sync
 sudo reboot

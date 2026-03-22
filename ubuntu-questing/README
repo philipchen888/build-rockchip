@@ -1,7 +1,7 @@
-Build ubuntu-plucky sdcard for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
+Build ubuntu-questing sdcard for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
 
-Input files: ../rootfs-ubuntu-plucky/linaro-rootfs.img
-                                    /linaro-esp.img
+Input files: ../rootfs-ubuntu-questing/linaro-rootfs.img
+                                      /linaro-esp.img
 
 Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.  ( usb3 stick for roc-rk3328-cc )
 sudo ./mksdcardimg.sh

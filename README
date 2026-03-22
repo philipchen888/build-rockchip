@@ -24,11 +24,11 @@ Steps to build orangepi5plus sdcard image:
    lb --version ( 3.0~a57-1 /usr/bin/lb )
 
    For trixie and bookworm:
-   wget http://deb.debian.org/debian/pool/main/l/live-build/live-build_20250505.tar.xz
-   tar xvf live-build_20250505.tar.xz
-   cd work
+   wget http://deb.debian.org/debian/pool/main/l/live-build/live-build_20250814.tar.xz
+   tar xvf live-build_20250814.tar.xz
+   cd live-build
    sudo make install
-   lb --version ( 20250505 /usr/bin/lb )
+   lb --version ( 20250814 /usr/bin/lb )
 
 3. cd ~/build-rockchip/uboot  ( Download u-boot to spi )
    Program spi flash with RK3588_NOR_FLASH.img for uefi boot:
@@ -43,7 +43,7 @@ Steps to build orangepi5plus sdcard image:
    Boot NVMe without sdcard.
 
 4. cd ~/build-rockchip/linux ( Compile mainline kernel )
-   git clone --depth=1 --branch v6.18 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+   git clone --depth=1 --branch v6.19 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
    vi ./linux/arch/arm64/configs/defconfig ( enable NVMe )
 
    For roc-rk3328-cc:
@@ -77,7 +77,7 @@ Steps to build orangepi5plus sdcard image:
    The results are in ./linaro-rootfs.img linaro-esp.img
    make clean
 
-8. cd ~/build-rockchip/rootfs-ubuntu-plucky  ( Compile ubuntu-plucky rootfs )
+8. cd ~/build-rockchip/rootfs-ubuntu-questing  ( Compile ubuntu-questing rootfs )
    make rootfs
    The results are in ./linaro-rootfs.img linaro-esp.img
    make clean
@@ -99,7 +99,7 @@ Steps to build orangepi5plus sdcard image:
     sudo cp ./rtlbt/* /mnt/lib/firmware/rtl_bt && sync && sudo umount /mnt
     Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
 
-12. cd ~/build-rockchip/ubuntu-plucky  ( Build ubuntu-plucky image )
+12. cd ~/build-rockchip/ubuntu-questing  ( Build ubuntu-questing image )
     Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
     sudo ./mksdcardimg.sh
     sudo mount /dev/sda2 /mnt

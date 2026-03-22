@@ -1,5 +1,7 @@
 Build trixie-uefi sdcard image for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
+Note: If mainline kernel v6.19 cannot boot trixie-uefi recompile kernel with v6.18.
+
 Input files: ../linux/linux/tmp/lib/modules
              ../linux/linux/arch/arm64/boot/Image
              ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
@@ -8,7 +10,7 @@ Input files: ../linux/linux/tmp/lib/modules
 
 cd ~/Downloads
 wget https://archives.fedoraproject.org/pub/fedora/linux/releases/43/Workstation/aarch64/images/Fedora-Workstation-Disk-43-1.6.aarch64.raw.xz
-wget https://get.debian.org/images/release/current/arm64/iso-cd/debian-13.1.0-arm64-netinst.iso
+wget wget https://mirror.us.mirhosting.net/debian-cd/13.3.0/arm64/iso-cd/debian-13.3.0-arm64-netinst.iso
 
 wget http://http.us.debian.org/debian/dists/trixie/main/installer-arm64/current/images/netboot/debian-installer/arm64/initrd.gz
 
@@ -18,6 +20,7 @@ Prepare initrd.gz:
 mkdir tmp; cd tmp;
 sudo gzip -dc ~/Downloads/initrd.gz | sudo cpio -id
 sudo cp -r ../../linux/linux/tmp/lib/modules/* lib/modules/
+\rm -f ../initrd-patched.gz
 find . | cpio -o -H newc | gzip > ../initrd-patched.gz
 cd ../
 
@@ -31,7 +34,7 @@ sudo e2fsck -f /dev/sda2
 sudo resize2fs /dev/sda2
 sudo mount /dev/sda2 /mnt
 sudo \rm -rf /mnt/boot /mnt/efi /mnt/dtb-* /mnt/init* /mnt/lost+found /mnt/symvers* /mnt/System* /mnt/vmlinuz* /mnt/.vmlinuz* /mnt/config* /mnt/dtb
-sudo 7z x ~/Downloads/debian-13.1.0-arm64-netinst.iso -o/mnt && sync;
+sudo 7z x ~/Downloads/debian-13.3.0-arm64-netinst.iso -o/mnt && sync;
 sudo cp ../linux/linux/arch/arm64/boot/Image /mnt
 (roc-rk3328-cc) sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb /mnt
 (rockpi4b) sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dtb /mnt
@@ -53,7 +56,7 @@ sudo rm -rf /mnt/b* /mnt/c* /mnt/f* /mnt/o* /mnt/r* /mnt/s* && sync && sudo umou
 Eject NVMe SSD/usb3 stick from PC.
 
 Plugin sdcard, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
-Plugin NVMe SSD and ethernet cable to opi5+. Power on opi5+.
+Plugin NVMe SSD and ethernet cable to opi5+/rockpi4b. Power on opi5+/rockpi4b.
 
 loading missing firmware? No
 Set User name: linaro
@@ -85,10 +88,10 @@ set menu_color_highlight=white/green
 
 menuentry "Boot UUID" {
     search --no-floppy --fs-uuid --set=root d694e093-a4ab-4a25-a9a4-d9b3ec7ba389
-    echo    'Loading Linux 6.18.0-dirty ...'
-    linux /boot/vmlinuz-6.18.0-dirty root=UUID=d694e093-a4ab-4a25-a9a4-d9b3ec7ba389 rootwait rw rootdelay=10
+    echo    'Loading Linux 6.19.0-dirty ...'
+    linux /boot/vmlinuz-6.19.0-dirty root=UUID=d694e093-a4ab-4a25-a9a4-d9b3ec7ba389 rootwait rw rootdelay=10
     echo    'Loading initial ramdisk ...'
-    initrd /boot/initrd.img-6.12.57+deb13-arm64
+    initrd /boot/initrd.img-6.12.74+deb13+1-arm64
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )
@@ -127,7 +130,7 @@ sync
 free
 sudo update-initramfs -u -k $(uname -r)
 sudo vi /boot/grub/grub.cfg ( change to:
-   initrd /boot/initrd.img-6.18.0-dirty
+   initrd /boot/initrd.img-6.19.0-dirty
 )
 sync
 sudo reboot

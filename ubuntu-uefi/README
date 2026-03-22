@@ -54,10 +54,10 @@ set menu_color_highlight=white/green
 
 menuentry "Boot UUID" {
     search --no-floppy --fs-uuid --set=root d9f66b23-9b3d-4c90-9f58-ccf99c0e88fa
-    echo    'Loading Linux 6.18.0-dirty ...'
-    linux /boot/vmlinuz-6.18.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
+    echo    'Loading Linux 6.19.0-dirty ...'
+    linux /boot/vmlinuz-6.19.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
     echo    'Loading initial ramdisk ...'
-    initrd /boot/initrd.img-6.17.0-8-generic
+    initrd /boot/initrd.img-6.17.0-19-generic
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )
@@ -95,7 +95,7 @@ sync
 free
 sudo update-initramfs -u -k $(uname -r)
 sudo vi /boot/grub/grub.cfg ( change to:
-   initrd /boot/initrd.img-6.18.0-dirty
+   initrd /boot/initrd.img-6.19.0-dirty
 )
 sync
 sudo reboot

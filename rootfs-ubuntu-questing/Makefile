@@ -29,7 +29,7 @@ prebuild:
 	--cache false \
 	--chroot-filesystem none \
 	--compression gzip \
-	--distribution plucky \
+	--distribution questing \
 	--gzip-options '-9 --rsyncable' \
 	--keyring-packages ubuntu-keyring \
 	--linux-flavours rockchip \
@@ -49,10 +49,10 @@ buildrootfs:
 	sudo lb build
 
 postbuild:
-	ARCH=arm64 $(PWD)/../mk-rootfs-ubuntu-plucky.sh
+	ARCH=arm64 $(PWD)/../mk-rootfs-ubuntu.sh
 
 mkimage:
 	$(PWD)/../mk-image.sh
 
 mkespimage:
-	$(PWD)/../mk-pluckyespimage.sh
+	$(PWD)/../mk-questingespimage.sh

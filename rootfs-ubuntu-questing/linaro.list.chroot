@@ -68,8 +68,9 @@ libgl1-mesa-dri
 net-tools
 netbase
 netcat-openbsd
-ntp
-ntpdate
+# ntp
+# ntpdate
+chrony
 obconf
 openssh-client
 openssh-server
