@@ -72,54 +72,66 @@ Steps to build orangepi5plus sdcard image:
    The results are in ./linaro-rootfs.img linaro-esp.img
    make clean
 
-7. cd ~/build-rockchip/rootfs-ubuntu-noble  ( Compile ubuntu-noble rootfs )
+7. cd ~/build-rockchip/rootfs-forky  ( Compile debian forky rootfs )
    make rootfs
    The results are in ./linaro-rootfs.img linaro-esp.img
    make clean
 
-8. cd ~/build-rockchip/rootfs-ubuntu-questing  ( Compile ubuntu-questing rootfs )
+8. cd ~/build-rockchip/rootfs-ubuntu-noble  ( Compile ubuntu-noble rootfs )
    make rootfs
    The results are in ./linaro-rootfs.img linaro-esp.img
    make clean
 
-9. cd ~/build-rockchip/bookworm-gnome  ( Build debian bookworm gnome-desktop image )
-   Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
-   sudo ./mksdcardimg.sh
-   Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
+9. cd ~/build-rockchip/rootfs-ubuntu-questing  ( Compile ubuntu-questing rootfs )
+   make rootfs
+   The results are in ./linaro-rootfs.img linaro-esp.img
+   make clean
 
-10. cd ~/build-rockchip/trixie-gnome    ( Build debian trixie gnome-desktop image )
+10. cd ~/build-rockchip/bookworm-gnome  ( Build debian bookworm gnome-desktop image )
     Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
     sudo ./mksdcardimg.sh
     Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
 
-11. cd ~/build-rockchip/ubuntu-noble  ( Build ubuntu-noble image )
+11. cd ~/build-rockchip/trixie-gnome    ( Build debian trixie gnome-desktop image )
+    Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
+    sudo ./mksdcardimg.sh
+    Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
+
+12. cd ~/build-rockchip/forky-gnome     ( Build debian forky gnome-desktop image )
+    Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
+    sudo ./mksdcardimg.sh
+    Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
+
+13. cd ~/build-rockchip/ubuntu-noble  ( Build ubuntu-noble image )
     Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
     sudo ./mksdcardimg.sh
     sudo mount /dev/sda2 /mnt
     sudo cp ./rtlbt/* /mnt/lib/firmware/rtl_bt && sync && sudo umount /mnt
     Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
 
-12. cd ~/build-rockchip/ubuntu-questing  ( Build ubuntu-questing image )
+14. cd ~/build-rockchip/ubuntu-questing  ( Build ubuntu-questing image )
     Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.
     sudo ./mksdcardimg.sh
     sudo mount /dev/sda2 /mnt
     sudo cp ./rtlbt/* /mnt/lib/firmware/rtl_bt && sync && sudo umount /mnt
     Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
 
-13. cd ~/build-rockchip/android       ( Build android image )
+15. cd ~/build-rockchip/android       ( Build android image )
 
-14. cd ~/build-rockchip/bookworm-flightaware  ( flightaware in bookworm )
+16. cd ~/build-rockchip/bookworm-flightaware  ( flightaware in bookworm )
 
-15. cd ~/build-rockchip/yocto         ( Build yocto desktop image )
+17. cd ~/build-rockchip/yocto         ( Build yocto desktop image )
 
-16. cd ~/build-rockchip/buildroot     ( Build buildroot image )
+18. cd ~/build-rockchip/buildroot     ( Build buildroot image )
 
-17. cd ~/build-rockchip/bookworm-gpio ( Build bookworm gpio tests )
+19. cd ~/build-rockchip/bookworm-gpio ( Build bookworm gpio tests )
 
-18. cd ~/build-rockchip/fedora        ( Build fedora image )
+20. cd ~/build-rockchip/fedora        ( Build fedora image )
 
-19. cd ~/build-rockchip/ubuntu-uefi   ( Build ubuntu-uefi image )
+21. cd ~/build-rockchip/ubuntu-uefi   ( Build ubuntu-uefi image )
 
-20. cd ~/build-rockchip/bookworm-uefi ( Build bookworm-uefi image )
+22. cd ~/build-rockchip/bookworm-uefi ( Build bookworm-uefi image )
 
-21. cd ~/build-rockchip/trixie-uefi   ( Build trixie-uefi image )
+23. cd ~/build-rockchip/trixie-uefi   ( Build trixie-uefi image )
+
+24. cd ~/build-rockchip/forky-uefi    ( Build forky-uefi image )

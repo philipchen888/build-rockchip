@@ -1,0 +1,10 @@
+Compile rootfs:
+
+Note: compile kernel with v6.18 for opi5+ forky-gnome, opi5+ forky-uefi, opi5+ trixie-uefi.
+
+make rootfs
+
+The results are in ./linaro-rootfs.img
+                   ./linaro-esp.img
+
+make clean
