@@ -1,10 +1,12 @@
-Build forky-gnome sdcard for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
+Build ubuntu-resolute sdcard for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
 
-Input files: ../rootfs-forky/linaro-rootfs.img
-                            /linaro-esp.img
+Input files: ../rootfs-ubuntu-resolute/linaro-rootfs.img
+                                      /linaro-esp.img
 
-Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.  ( roc-rk3328-cc use usb3 stick )
+Plugin NVME-SSD/sdcard/emmc/USB2-SATA-SSD to PC.  ( usb3 stick for roc-rk3328-cc )
 sudo ./mksdcardimg.sh
+sudo mount /dev/sda2 /mnt
+sudo cp ./rtlbt/* /mnt/lib/firmware/rtl_bt && sync && sudo umount /mnt
 Eject NVME-SSD/sdcard/emmc/USB2-SATA-SSD from PC.
 
 Plugin sdcard, usb3 stick and ethernet cable to roc-rk3328-cc.
@@ -22,25 +24,34 @@ sudo dpkg-reconfigure locales
 date
 sudo apt update
 sudo apt upgrade
+sudo apt dist-upgrade
 sync
 free
 glxinfo | grep OpenGL
 date
-Check if Debian is running UEFI mode:
+Check if Ubuntu is running UEFI mode:
 ls /sys/firmware/efi
 Check display mode: ( wayland or x11 )
 echo $XDG_SESSION_TYPE
 Check audio driver: ( pulseaudio or pipewire )
 pactl info
 
-sudo apt install python3-pip python3-setuptools ffmpeg mpv glmark2-es2-wayland pandoc firefox-esr vlc vlc-plugin-video-output pavucontrol rfkill vsftpd
+sudo apt install speedtest-cli python3-pip python3-setuptools ffmpeg mpv glmark2-es2-wayland pandoc vlc vlc-plugin-video-output vsftpd
+
+speedtest-cli --secure
 
 glmark2-es2-wayland
 
-aplay -l
+systemctl --user restart pipewire
+systemctl --user restart wireplumber
+sudo systemctl restart alsa-restore
+aplay -l     ( power down / up if no hdmi show up )
 pavucontrol  ( select hdmi0 as default )
 
-firefox -> youtube.com -> search YmDNhi07_Ho
+sudo add-apt-repository ppa:mozillateam/ppa
+sudo apt update; sudo apt upgrade -y;
+sudo apt install firefox-esr
+firefox -> youtube -> search YmDNhi07_Ho
 
 Do follows on PC, then ftp swan.mp4 to rockpi4b/opi5+/roc-rk3328-cc.
 (

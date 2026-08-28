@@ -30,7 +30,7 @@ prebuild:
 	--cache false \
 	--chroot-filesystem none \
 	--compression gzip \
-	--distribution questing \
+	--distribution resolute \
 	--gzip-options '-9 --rsyncable' \
 	--keyring-packages ubuntu-keyring \
 	--linux-flavours rockchip \
@@ -56,4 +56,4 @@ mkimage:
 	$(PWD)/../mk-image.sh
 
 mkespimage:
-	DISTRIBUTION=questing $(PWD)/../mk-espimage.sh
+	DISTRIBUTION=resolute $(PWD)/../mk-espimage.sh

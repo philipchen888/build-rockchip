@@ -18,9 +18,9 @@ Build buildroot sdcard image for orangepi 5 plus, rockpi4b and roc-rk3328-cc.
                              ../linux/out/boot.img
                              ../linux/linux/tmp/lib/modules
 
-wget https://buildroot.org/downloads/buildroot-2025.08.1.tar.gz
-tar -xzf buildroot-2025.08.1.tar.gz
-mv buildroot-2025.08.1 buildroot
+wget https://buildroot.org/downloads/buildroot-2026.05.tar.xz
+tar -xJf buildroot-2026.05.tar.xz
+mv buildroot-2026.05 buildroot
 
 For opi5+:
 vi ./buildroot/configs/orangepi_5_plus_defconfig ( delete KERNEL, UBOOT, BR2_DOWNLOAD_FORCE_CHECK_HASHES=y, BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_6_12=y, BR2_GLOBAL_PATCH_DIR, append ./patches/orangepi_5_defconfig )
@@ -115,8 +115,6 @@ card 1
 
 -----------------------------------------------------
 aplay /home/linaro/yoursong.wav
-(opi5+)    mpg123 -a hw:1,0 /home/linaro/yoursong.mp3
-(rockpi4b) mpg123 -a hw:0,0 /home/linaro/yoursong.mp3
 mpv /home/linaro/yoursong.mp3
 
 For rockpi4b:

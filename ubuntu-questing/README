@@ -36,7 +36,7 @@ echo $XDG_SESSION_TYPE
 Check audio driver: ( pulseaudio or pipewire )
 pactl info
 
-sudo apt install speedtest-cli python3-pip python3-setuptools ffmpeg mpv glmark2-es2-wayland pandoc vlc vlc-plugin-video-output vsftpd
+sudo apt install speedtest-cli python3-pip python3-setuptools ffmpeg mpv glmark2-es2-wayland pandoc vlc vlc-plugin-video-output vsftpd snapd
 
 speedtest-cli --secure
 
@@ -48,10 +48,10 @@ sudo systemctl restart alsa-restore
 aplay -l     ( power down / up if no hdmi show up )
 pavucontrol  ( select hdmi0 as default )
 
-sudo add-apt-repository ppa:mozillateam/ppa
-sudo apt update; sudo apt upgrade -y;
-sudo apt install firefox-esr
-firefox -> youtube -> search YmDNhi07_Ho
+# sudo add-apt-repository ppa:mozillateam/ppa
+# sudo apt update; sudo apt upgrade -y;
+# sudo apt install firefox
+# firefox -> youtube -> search YmDNhi07_Ho
 
 Do follows on PC, then ftp swan.mp4 to rockpi4b/opi5+/roc-rk3328-cc.
 (

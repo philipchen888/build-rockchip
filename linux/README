@@ -1,7 +1,6 @@
 compile mainline kernel for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
-git clone --depth=1 --branch v6.19 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-Note: compile kernel with v6.18 for opi5+ forky-gnome, opi5+ forky-uefi, opi5+ trixie-uefi.
+git clone --depth=1 --branch v6.18 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
 For opi5+ and rockpi4b:
 vi ./linux/arch/arm64/configs/defconfig ( enable NVMe change to:

@@ -4,7 +4,7 @@ export ARCH=arm64
 export MYCHIP := rockpi4b
 export CROSS_COMPILE=/usr/bin/aarch64-linux-gnu-
 
-kernel: buildkernel
+kernel: buildkernel buildkernel2
 
 clean:
 	cd linux; \
@@ -13,13 +13,20 @@ clean:
 buildkernel:
 	cp ./patches/$(MYCHIP)_40_custom_uuid ./patches/40_custom_uuid;
 	cd linux; \
-	sudo \rm -rf tmp; mkdir tmp; mkdir -p tmp/lib; \
 	sudo make mrproper; \
 	make defconfig; \
-	make all -j8; \
+	make all -j8;
+
+buildkernel2:
+	cd linux; \
+	sudo \rm -rf tmp; mkdir tmp; mkdir -p tmp/lib; \
+	KVER=$$(make ARCH=arm64 -s kernelrelease); \
 	sudo make ARCH=arm64 INSTALL_MOD_PATH=./tmp modules_install; \
 	sudo make ARCH=arm64 INSTALL_DTBS_PATH=./tmp/boot/dtb dtbs_install; \
-	sudo make ARCH=arm64 INSTALL_PATH=./tmp/boot install
+	sudo cp System.map ./tmp/boot/System.map-$$KVER; \
+	sudo cp .config ./tmp/boot/config-$$KVER; \
+	gzip -c arch/arm64/boot/Image | sudo tee ./tmp/boot/vmlinuz-$$KVER > /dev/null; \
+	file ./tmp/boot/vmlinuz-$$KVER
 
 postbuildkernel:
 	\rm -rf out; mkdir out;

@@ -1,6 +1,7 @@
 export BOARD=orangepi5plus
 export LB_BOOTSTRAP_INCLUDE="apt-transport-https"
 export ARCH=arm64
+export DISTRIBUTION := resolute
 export CROSS_COMPILE=/usr/bin/aarch64-linux-gnu-
 
 rootfs: clean prebuild buildrootfs postbuild mkimage mkespimage
@@ -25,7 +26,7 @@ prebuild:
 	--binary-filesystem ext4 \
 	--binary-images tar \
 	--bootstrap-qemu-arch arm64 \
-	--bootstrap-qemu-static /usr/bin/qemu-aarch64-static \
+	--bootstrap-qemu-static /usr/bin/qemu-aarch64 \
 	--cache false \
 	--chroot-filesystem none \
 	--compression gzip \
@@ -55,4 +56,4 @@ mkimage:
 	$(PWD)/../mk-image.sh
 
 mkespimage:
-	$(PWD)/../mk-ubuntuespimage.sh
+	DISTRIBUTION=noble $(PWD)/../mk-espimage.sh

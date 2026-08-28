@@ -38,7 +38,7 @@ cat $TARGET_ROOTFS_DIR/boot/40_custom_uuid
 sudo cp -rf ../overlay/* $TARGET_ROOTFS_DIR/
 
 echo -e "\033[36m Change root.....................\033[0m"
-sudo cp /usr/bin/qemu-aarch64-static $TARGET_ROOTFS_DIR/usr/bin/
+sudo cp /usr/bin/qemu-aarch64 $TARGET_ROOTFS_DIR/usr/bin/
 
 sudo mount -o bind /proc $TARGET_ROOTFS_DIR/proc
 sudo mount -o bind /sys $TARGET_ROOTFS_DIR/sys

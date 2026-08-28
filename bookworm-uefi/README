@@ -1,7 +1,5 @@
 Build bookworm-uefi sdcard image for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
-Note: If mainline kernel v6.19 cannot boot bookworm-uefi recompile kernel with v6.18.
-
 Input files: ../linux/linux/tmp/lib/modules
              ../linux/linux/arch/arm64/boot/Image
              ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
@@ -9,8 +7,8 @@ Input files: ../linux/linux/tmp/lib/modules
              ../linux/linux/arch/arm64/boot/dtb/rockchip/rk3399-rock-pi-4b.dtb
 
 cd ~/Downloads
-wget https://archives.fedoraproject.org/pub/fedora/linux/releases/43/Workstation/aarch64/images/Fedora-Workstation-Disk-43-1.6.aarch64.raw.xz
-wget https://mirror.us.mirhosting.net/debian-cd/12.11.0/arm64/iso-cd/debian-12.11.0-arm64-netinst.iso
+wget https://archives.fedoraproject.org/pub/fedora/linux/releases/44/Workstation/aarch64/images/Fedora-Workstation-Disk-44-1.7.aarch64.raw.xz
+wget https://cloud.debian.org/images/archive/12.12.0/arm64/iso-cd/debian-12.12.0-arm64-netinst.iso
 
 wget http://http.us.debian.org/debian/dists/bookworm/main/installer-arm64/current/images/netboot/debian-installer/arm64/initrd.gz
 
@@ -29,12 +27,12 @@ sudo ./mksdcardimg.sh
 sudo mkfs.vfat /dev/sda1
 sudo mkfs.ext4 /dev/sda2
 sudo fdisk -l /dev/sda
-xzcat ~/Downloads/Fedora-Workstation-Disk-43-1.6.aarch64.raw.xz | sudo dd status=progress bs=4096 of=/dev/sda skip=4352 seek=4352 count=640000 conv=notrunc,fsync
+xzcat ~/Downloads/Fedora-Workstation-Disk-44-1.7.aarch64.raw.xz | sudo dd status=progress bs=4096 of=/dev/sda skip=4352 seek=4352 count=640000 conv=notrunc,fsync
 sudo e2fsck -f /dev/sda2
 sudo resize2fs /dev/sda2
 sudo mount /dev/sda2 /mnt
 sudo \rm -rf /mnt/boot /mnt/efi /mnt/dtb-* /mnt/init* /mnt/lost+found /mnt/symvers* /mnt/System* /mnt/vmlinuz* /mnt/.vmlinuz* /mnt/config* /mnt/dtb
-sudo 7z x ~/Downloads/debian-12.11.0-arm64-netinst.iso -o/mnt && sync;
+sudo 7z x ~/Downloads/debian-12.12.0-arm64-netinst.iso -o/mnt && sync;
 sudo cp ../linux/linux/arch/arm64/boot/Image /mnt
 (roc-rk3328-cc) sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb /mnt
 (rockpi4b) sudo cp ../linux/linux/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dtb /mnt
@@ -89,10 +87,10 @@ set menu_color_highlight=white/green
 
 menuentry "Boot UUID" {
     search --no-floppy --fs-uuid --set=root 4817ba5f-fb50-43b1-9f8c-fa25047a570d
-    echo    'Loading Linux 6.19.0-dirty ...'
-    linux /boot/vmlinuz-6.19.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
+    echo    'Loading Linux 6.18.0-dirty ...'
+    linux /boot/vmlinuz-6.18.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
     echo    'Loading initial ramdisk ...'
-    initrd /boot/initrd.img-6.1.0-44-arm64
+    initrd /boot/initrd.img-6.1.0-52-arm64
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )
@@ -144,7 +142,7 @@ exit
 sync
 sudo update-initramfs -u -k $(uname -r)
 sudo vi /boot/grub/grub.cfg ( change to:
-   initrd /boot/initrd.img-6.19.0-dirty
+   initrd /boot/initrd.img-6.18.0-dirty
 )
 sync
 sudo reboot
