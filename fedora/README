@@ -3,7 +3,7 @@ Build fedora sdcard image for orangepi 5 plus, rockpi4b and roc-rk3328-cc:
 cd ~/Downloads
 wget https://archives.fedoraproject.org/pub/fedora/linux/releases/44/Workstation/aarch64/images/Fedora-Workstation-Disk-44-1.7.aarch64.raw.xz
 
-Plugin USB3 1TB SSD to PC.   ( roc-rk3328-cc use usb3 stick ) 
+Plugin USB3 1TB SSD to PC.
 sudo ./mksdcardimg.sh
 sudo mkfs.vfat /dev/sda1
 sudo mkfs.ext4 /dev/sda2
@@ -14,9 +14,9 @@ sudo mount /dev/sda3 /mnt
 sudo mkdir -p /mnt/root/lib/firmware/brcm
 sudo cp ./packages/* /mnt/root/lib/firmware/brcm
 sync; sudo umount /mnt;
-Eject USB3 1TB SSD/usb3 stick from PC.
+Eject USB3 1TB SSD from PC.
 
-Plugin sdcard, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
+Plugin sdcard, USB3 1TB SSD and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
 Plugin USB3 1TB SSD and ethernet cable to orangepi 5 plus. Power on orangepi 5 plus.
 Plugin USB3 1TB SSD to rockpi4b. Power on rockpi4b.
 
@@ -55,7 +55,7 @@ glmark2-es2-wayland
 aplay -l
 pavucontrol  ( select hdmi as default )
 
-(opi5+) firefox -> youtube.com -> search YmDNhi07_Ho
+firefox -> youtube.com -> search YmDNhi07_Ho
 
 sudo vi /etc/vsftpd/vsftpd.conf
 sudo systemctl restart vsftpd

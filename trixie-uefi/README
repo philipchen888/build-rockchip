@@ -89,7 +89,7 @@ menuentry "Boot UUID" {
     echo    'Loading Linux 6.18.0-dirty ...'
     linux /boot/vmlinuz-6.18.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
     echo    'Loading initial ramdisk ...'
-    initrd /boot/initrd.img-6.12.105+deb13-arm64
+    initrd /boot/initrd.img-6.12.107+deb13-arm64
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )

@@ -37,6 +37,7 @@ cp ./patches/roc-rk3328-cc/* ./buildroot/board/radxa/rock4se/
 cd buildroot
 \rm -rf .config output
 make clean
+sudo update-alternatives --install /usr/bin/install install /usr/bin/gnuinstall 100
 (rockpi4b, roc-rk3328-cc) make rock4se_defconfig
 (rockpi4b) make linux
 (opi5+)    make orangepi_5_plus_defconfig
@@ -114,7 +115,14 @@ card 1
 (rockpi4b, opi5+) alsactl -F restore
 
 -----------------------------------------------------
+(roc-rk3328-cc) pulseaudio --start
+(roc-rk3328-cc) pactl list short sinks
+(roc-rk3328-cc) pactl set-sink-volume 0 25%
 aplay /home/linaro/yoursong.wav
+
+(roc-rk3328-cc) pulseaudio --start
+(roc-rk3328-cc) pactl list short sinks
+(roc-rk3328-cc) pactl set-sink-volume 0 25%
 mpv /home/linaro/yoursong.mp3
 
 For rockpi4b:

@@ -53,7 +53,7 @@ CONFIG_BOOTSTD_FULL=y
 CONFIG_BOOTFLOW=y
 CONFIG_BOOTFLOW_FULL=y
 )
-vi u-boot/scripts/dtc/pylibfdt/libfdt.i search SWIG_Python_AppendOutput add ,1 after val buff
+vi u-boot/scripts/dtc/pylibfdt/libfdt.i_shipped search SWIG_Python_AppendOutput add ,1 after val buff
 make -f Makefile.opi5 u-boot
 The resulta are in ./out/idbloader.img
                         /u-boot.itb

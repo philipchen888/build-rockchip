@@ -1,5 +1,8 @@
 Build ubuntu-uefi sdcard image for orangepi5 plus, rockpi4b and roc-rk3328-cc:
 
+Need external fan !!
+ubuntu-26.04 needs 6GB DDR !! So use ubuntu-25.10 for now.
+
 (roc-rk3328-cc) Install ubuntu from USB3 1TB SSD ubuntu iso to empty usb3 stick.
 (rockpi4b)      Install ubuntu from USB3 1TB SSD ubuntu iso to empty NVMe-SSD.
 (opi5+)         Install ubuntu from USB3 1TB SSD ubuntu iso to empty NVMe-SSD.
@@ -27,7 +30,7 @@ Plugin NVMe-SSD to PC.    ( roc-rk3328-cc use usb3 stick )
 sudo ./mknvme.sh
 Eject NVMe-SSD from PC.   ( roc-rk3328-cc use usb3 stick )
 
-Plugin sdcard, USB3 1TB SSD, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
+Plugin sdcard, USB3 1TB SSD to UDB3 slot of roc-rk3328-cc, usb3 stick and ethernet cable to roc-rk3328-cc. Power on roc-rk3328-cc.
 Plugin NVMe-SSD, USB3 1TB SSD and ethernet cable to opi5+/rockpi4b. Power on opi5+/rockpi4b.
 
 Select install
