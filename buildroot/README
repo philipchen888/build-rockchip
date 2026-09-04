@@ -11,6 +11,9 @@ Build buildroot sdcard image for orangepi 5 plus, rockpi4b and roc-rk3328-cc.
 (rockpi4b)      Input files: ../uboot/out/idbloader.img
                              ../uboot/out/uboot.img
                              ../uboot/out/trust.img
+                             ../linux/linux/arch/arm64/boot/Image
+                             ../linux/linux/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dtb
+                             ../linux/linux/tmp/lib/modules/
 
 (roc-rk3328-cc) Input files: ../uboot/out/idbloader.img  ( config to use extlinux )
                              ../uboot/out/uboot.img
@@ -27,7 +30,7 @@ vi ./buildroot/configs/orangepi_5_plus_defconfig ( delete KERNEL, UBOOT, BR2_DOW
 cp ./patches/orangepi-5/* ./buildroot/board/orangepi/orangepi-5-plus/
 
 For rockpi4b:
-vi ./buildroot/configs/rock4se_defconfig ( delete UBOOT, KERNEL, BR2_DOWNLOAD_FORCE_CHECK_HASHES=y, append ./patches/rockpi4_defconfig )
+vi ./buildroot/configs/rock4se_defconfig ( delete UBOOT, KERNEL, BR2_DOWNLOAD_FORCE_CHECK_HASHES=y, BR2_GLOBAL_PATCH_DIR, append ./patches/rockpi4_defconfig )
 cp ./patches/rockpi-4/* ./buildroot/board/radxa/rock4se/
 
 For roc-rk3328-cc:
@@ -39,7 +42,6 @@ cd buildroot
 make clean
 sudo update-alternatives --install /usr/bin/install install /usr/bin/gnuinstall 100
 (rockpi4b, roc-rk3328-cc) make rock4se_defconfig
-(rockpi4b) make linux
 (opi5+)    make orangepi_5_plus_defconfig
 make
 
@@ -48,12 +50,14 @@ The result is in ./output/images/sdcard.img
 Plugin sdcard to PC.
 sudo dd if=./output/images/sdcard.img of=/dev/sda bs=4096 conv=notrunc,fsync
 
-(opi5+, rockpi4b) sudo mount /dev/sda4 /mnt
-(roc-rk3328-cc)   sudo mount /dev/sda5 /mnt
+sudo partprobe /dev/sda
+
+(opi5+) sudo mount /dev/sda4 /mnt
+(rockpi4b, roc-rk3328-cc)   sudo mount /dev/sda5 /mnt
 sudo vi /mnt/etc/network/interfaces ( delete everything after iface lo inet loopback )
 sudo vi /mnt/etc/vsftpd.conf ( anonymous_enable=NO, local_enable=YES, write_enable=YES )
-(opi5+, roc-rk3328-cc) sudo mkdir -p /mnt/lib/modules
-(opi5+, roc-rk3328-cc) sudo cp -r ../../linux/linux/tmp/lib/modules/* /mnt/lib/modules
+sudo mkdir -p /mnt/lib/modules
+sudo cp -r ../../linux/linux/tmp/lib/modules/* /mnt/lib/modules
 (rockpi4b) sudo mkdir -p /mnt/lib/firmware/brcm/
 (rockpi4b) sudo cp ../patches/brcm/* /mnt/lib/firmware/brcm/
 sync; sudo umount /mnt;
@@ -111,7 +115,6 @@ card 1
 }
 )
 
-(rockpi4b) change to card 0
 (rockpi4b, opi5+) alsactl -F restore
 
 -----------------------------------------------------

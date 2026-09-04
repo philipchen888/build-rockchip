@@ -15,6 +15,8 @@ Username: linaro
 Password: linaro
 (rockpi4b) Setup wifi.
 Disable power saving, auto suspend and screen saver.
+sudo systemctl start ssh.service
+sudo systemctl enable ssh.service
 uname -a
 lsb_release -a
 sudo dpkg-reconfigure tzdata
@@ -54,7 +56,7 @@ cd ../
 )
 
 mpv --hwdec=auto-copy swan.mp4
-ffplay swan.mp4
+ffplay -autoexit swan.mp4
 cvlc --gl=wgl --glconv=any swan.mp4
 
 (opi5+, roc-rk3328-cc) Plugin ASUS USB-BT500 bluetooth usb dongle to opi5+/roc-rk3328-cc.
