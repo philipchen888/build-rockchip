@@ -108,6 +108,7 @@ sed -i 's/#WaylandEnable=false/WaylandEnable=true/g' /etc/gdm3/custom.conf
 
 systemctl enable rc-local
 systemctl enable resize-helper
+chsh -s /bin/bash linaro
 update-initramfs -c -k $KERNEL_VERSION
 sync
 

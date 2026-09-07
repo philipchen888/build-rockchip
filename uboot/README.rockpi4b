@@ -57,9 +57,14 @@ gunzip rockpi4b_debian_buster_xfce4_arm64_20210824_0233-gpt.img.gz
 
 Unplug EMMC/USB-SATA-SSD/NVMe-SSD from rockpi4b
 Burn rockpi4b_debian_buster_xfce4_arm64_20210824_0233-gpt.img to sdcard.
+sudo mount /dev/sda4 /mnt
+sudo vi /mnt/hw_intfc.conf ( change to intfc:uart4=off intfc:spi1=on intfc:dtoverlay=spi1-flash )
+sync; sudo umount /mnt
+Eject sdcard from PC
 Boot rockpi4b with sdcard.  ( username: rock, password: rock )
 
 Erase spi nor flash:
+ls /dev ( find mtdblock0 )
 sudo dd if=/dev/zero of=/dev/mtdblock0 bs=1M seek=0 count=4
 sync
 

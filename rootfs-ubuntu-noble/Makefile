@@ -25,6 +25,7 @@ prebuild:
 	--backports false \
 	--binary-filesystem ext4 \
 	--binary-images tar \
+	--bootappend-live "hostname=linaro-alip username=linaro" \
 	--bootstrap-qemu-arch arm64 \
 	--bootstrap-qemu-static /usr/bin/qemu-aarch64 \
 	--cache false \

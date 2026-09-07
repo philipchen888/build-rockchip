@@ -89,7 +89,7 @@ menuentry "Boot UUID" {
     echo    'Loading Linux 6.18.0-dirty ...'
     linux /boot/vmlinuz-6.18.0-dirty root=LABEL=rootfs rootwait rw rootdelay=10
     echo    'Loading initial ramdisk ...'
-    initrd /boot/initrd.img-7.1.8+deb14.1-arm64
+    initrd /boot/initrd.img-7.1.12+deb14-arm64
     devicetree /boot/dtb/rockchip/rk3588-orangepi-5-plus.dtb
 }
 )
@@ -113,7 +113,7 @@ Disable power saving, auto suspend and screen saver.
 su -
 usermod -aG adm,sudo,video linaro
 sync
-reboot
+click restart
 
 sudo apt install net-tools openssh-server pulseaudio-utils
 sudo ifconfig
