@@ -44,7 +44,7 @@ Steps to build orangepi5plus, rockpi4b and roc-rk3328-cc sdcard image:
    Boot NVMe without sdcard.
 
 4. cd ~/build-rockchip/linux ( Compile mainline kernel )
-   git clone --depth=1 --branch v6.18 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+   git clone --depth=1 --branch v6.19 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
    vi ./linux/arch/arm64/configs/defconfig ( enable NVMe )
 
    For roc-rk3328-cc:
@@ -131,7 +131,7 @@ Steps to build orangepi5plus, rockpi4b and roc-rk3328-cc sdcard image:
 
 17. cd ~/build-rockchip/android       ( Build android image )
 
-18. cd ~/build-rockchip/bookworm-flightaware  ( flightaware in bookworm )
+18. cd ~/build-rockchip/trixie-flightaware  ( Build flightaware image )
 
 19. cd ~/build-rockchip/yocto         ( Build yocto desktop image )
 
