@@ -21,27 +21,28 @@ Build yocto desktop sdcard image for orangepi 5 plus, rockpi4b and roc-rk3328-cc
    (roc-rk3328-cc)
    python3 bitbake/bin/bitbake-setup init --setup-dir-name $PWD --non-interactive ../patches/roc-rk3328-cc.conf.json roc-rk3328-cc
    cp ../patches/local-rk3328.conf ./build/conf/local.conf
-   cp ../patches/rockchip-rk3328.wks ./layers/meta-rockchip/wic/rockchip.wks
+   cp ../patches/rockchip-rk3328.wks ./layers/meta-rockchip/files/wic/rockchip.wks
 
    (rockpi4b)
    python3 bitbake/bin/bitbake-setup init --setup-dir-name $PWD --non-interactive ../patches/rockpi4b.conf.json rockpi4b
    cp ../patches/local-rockpi4b.conf ./build/conf/local.conf
-   cp ../patches/rockchip.wks ./layers/meta-rockchip/wic
+   cp ../patches/rockchip.wks ./layers/meta-rockchip/files/wic
  
    (opi5+)
    python3 bitbake/bin/bitbake-setup init --setup-dir-name $PWD --non-interactive ../patches/orangepi5plus.conf.json orangepi5plus
    cp ../patches/local-opi5.conf ./build/conf/local.conf
-   cp ../patches/rockchip-opi5.wks ./layers/meta-rockchip/wic/rockchip.wks
+   cp ../patches/rockchip-opi5.wks ./layers/meta-rockchip/files/wic/rockchip.wks
 
    cp ../patches/hdmi-audio.cfg ./layers/meta-rockchip/recipes-kernel/linux/linux-rockchip
-   vi ./layers/meta-rockchip/recipes-kernel/linux/linux-rockchip.inc ( append
+   vi ./layers/meta-rockchip/recipes-kernel/linux/linux-yocto_%.bbappend ( append
    SRC_URI:append:rockchip = " file://hdmi-audio.cfg"
    )
    . ./build/init-build-env
 
+   echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
    bitbake -s
    bitbake -c cleansstate u-boot linux-yocto core-image-weston clang
-   bitbake -k u-boot ( if missing bl31-rk3399.elf cp ./tmp/deploy/images/rock-pi-4b/trusted-firmware-a/bl31.elf ./tmp/deploy/images/rock-pi-4b/bl31-rk3399.elf )
+   bitbake -k u-boot
    bitbake -k clang llvm-native clang-native rust-native
    bitbake -k linux-yocto
    bitbake -k core-image-weston
@@ -65,7 +66,6 @@ Build yocto desktop sdcard image for orangepi 5 plus, rockpi4b and roc-rk3328-cc
    (roc-rk3328-cc) sudo cp -r ../../../linux/linux/tmp/lib/modules/* /mnt/lib/modules
    (rockpi4b)      sudo mount /dev/sda1 /mnt
    (opi5+)         sudo mount /dev/sda3 /mnt
-   sudo vi /mnt/etc/network/interfaces ( delete everything after iface lo inet loopback )
    sudo vi /mnt/etc/xdg/weston/weston.ini ( delete everything, add
    [core]
    xwayland=true
@@ -145,7 +145,7 @@ ctl.!default {
 }
 )
 
-Note: for rockpi4b change card hdmi0 to card hdmisound. for roc-rk3328-cc card 0.
+Note: for rockpi4b change card hdmi0 to card 1. for roc-rk3328-cc card 0.
 alsactl -F restore
 
 In weston desktop:
@@ -153,11 +153,8 @@ su -
 whoami
 glmark2-es2-wayland
 
-(roc-rk3328-cc) pulseaudio --start
-(roc-rk3328-cc) pactl set-sink-volume 0 50%
+amixer set Master 50%
 
 aplay /home/linaro/yoursong.wav
 mpv /home/linaro/yoursong.mp3
-(roc-rk3328-cc) mpv -fs --vo=gpu --gpu-context=wayland /home/linaro/yourvideo.mp4
-(opi5+)         mpv -fs /home/linaro/yourvideo.mp4 
-(rockpi4b)      mpv -fs --hwdec=v4l2m2m-copy --vo=gpu --gpu-context=wayland /home/linaro/yourvideo.mp4
+mpv -fs /home/linaro/yourvideo.mp4
